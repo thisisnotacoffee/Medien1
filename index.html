@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mediensammlung</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Medien">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1ef;--surface:#fff;--ink:#1c2a29;--muted:#5d6e6c;--line:#d3dbd8;--film:#2f4b8a;--book:#a8741a;--game:#6a46a8;--accent:#1c2a29;--onaccent:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a19;--surface:#1b2625;--ink:#e6eeec;--muted:#93a6a3;--line:#2c3a38;--film:#7c9ae0;--book:#e0b25c;--game:#b496ea;--accent:#e6eeec;--onaccent:#121a19;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121a19;--surface:#1b2625;--ink:#e6eeec;--muted:#93a6a3;--line:#2c3a38;--film:#7c9ae0;--book:#e0b25c;--game:#b496ea;--accent:#e6eeec;--onaccent:#121a19;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 90px}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 14px}
+.counts{display:flex;gap:8px;margin-bottom:16px}
+.count{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;border-left:6px solid var(--c)}
+.count b{display:block;font-size:1.5rem;font-weight:800;line-height:1.1}
+.count span{color:var(--muted);font-size:.85rem}
+.tools{display:grid;gap:8px;margin-bottom:12px}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+:focus-visible{outline:3px solid var(--game);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.item{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left:8px solid var(--c);border-radius:10px;padding:12px;cursor:pointer;width:100%;text-align:left}
+.item h3{margin:0;font-size:1.05rem;font-weight:600}
+.meta{color:var(--muted);font-size:.9rem}
+.badge{display:inline-block;font-size:.8rem;padding:1px 8px;border-radius:99px;border:1px solid var(--line);margin-top:4px;margin-right:4px}
+.stars{margin-left:auto;color:var(--book);white-space:nowrap;letter-spacing:1px}
+.empty{padding:36px 12px;text-align:center;color:var(--muted)}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--accent);color:var(--onaccent);border:0;border-radius:99px;padding:14px 22px;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer}
+dialog{width:min(520px,94vw);border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:18px;max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+label{display:grid;gap:4px;font-size:.9rem;color:var(--muted);margin-bottom:10px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.btn.danger{color:#c0392b;margin-right:auto}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:12px 0}
+textarea{min-height:110px}
+.srch{display:flex;gap:8px}.srch input{flex:1}
+video{width:100%;aspect-ratio:4/3;object-fit:cover;background:#000;border-radius:10px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Meine Mediensammlung</h1>
+  <div class="counts" id="counts"></div>
+  <div class="tools">
+    <div class="srch"><input id="q" type="search" placeholder="Titel, Autor oder Standort suchen" aria-label="Suche"><button class="btn" id="scanTop" type="button">Scannen</button></div>
+    <div class="row2">
+      <select id="status" aria-label="Status"><option value="">Alle Status</option><option>Vorhanden</option><option>Verliehen</option><option>Wunschliste</option></select>
+      <select id="sort" aria-label="Sortierung"><option value="title">Titel A–Z</option><option value="new">Zuletzt hinzugefügt</option><option value="year">Erscheinungsjahr</option><option value="rating">Bewertung</option></select>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <ul id="list"></ul>
+  <button class="link" id="dataBtn">Sicherung &amp; Wiederherstellung</button>
+</main>
+<button class="fab" id="add">+ Neu</button>
+
+<dialog id="dlg">
+  <div id="formBox">
+    <label>Art<select id="f-type"><option>Film</option><option>Buch</option><option>Spiel</option></select></label>
+    <label>Barcode (EAN oder ISBN)<span class="srch"><input id="f-code" inputmode="numeric"><button class="btn" id="scanForm" type="button">Scannen</button></span></label>
+    <p class="meta" id="codeMsg" role="status" style="margin:-4px 0 10px"></p>
+    <label>Titel<input id="f-title" required></label>
+    <label><span id="f-by-l">Regie</span><input id="f-by"></label>
+    <div class="row2">
+      <label>Jahr<input id="f-year" type="number" min="1800" max="2100" inputmode="numeric"></label>
+      <label>Plattform / Format<input id="f-fmt" placeholder="z. B. Blu-ray, Taschenbuch, PS5"></label>
+    </div>
+    <div class="row2">
+      <label>Status<select id="f-status"><option>Vorhanden</option><option>Verliehen</option><option>Wunschliste</option></select></label>
+      <label>Bewertung<select id="f-rating"><option value="0">Keine</option><option value="1">1 Stern</option><option value="2">2 Sterne</option><option value="3">3 Sterne</option><option value="4">4 Sterne</option><option value="5">5 Sterne</option></select></label>
+    </div>
+    <label>Standort oder verliehen an<input id="f-place" placeholder="z. B. Regal 2, Anna"></label>
+    <label>Notiz<textarea id="f-note" style="min-height:70px"></textarea></label>
+    <div class="actions">
+      <button class="btn danger" id="del" type="button">Löschen</button>
+      <button class="btn" id="cancel" type="button">Abbrechen</button>
+      <button class="btn primary" id="save" type="button">Speichern</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="scanDlg">
+  <video id="video" playsinline muted></video>
+  <p class="meta" id="scanMsg" role="status">Halte den Barcode ruhig vor die Kamera.</p>
+  <label>Oder Code von Hand eingeben<span class="srch"><input id="scanInput" inputmode="numeric"><button class="btn" id="scanManual" type="button">Übernehmen</button></span></label>
+  <div class="actions"><button class="btn" id="scanCancel" type="button">Abbrechen</button></div>
+</dialog>
+
+<dialog id="dataDlg">
+  <p class="meta">Kopiere den Text unten als Sicherung. Zum Wiederherstellen füge eine Sicherung ein und wähle „Importieren“.</p>
+  <textarea id="json" aria-label="Sicherungsdaten"></textarea>
+  <div class="actions" style="margin-top:10px">
+    <button class="btn" id="copy" type="button">Kopieren</button>
+    <button class="btn" id="imp" type="button">Importieren</button>
+    <button class="btn primary" id="closeData" type="button">Schließen</button>
+  </div>
+  <p class="meta" id="dataMsg" role="status"></p>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
+<script>
+const KEY="medien-inventar-v1";
+const TYPES=["Film","Buch","Spiel"], COL={Film:"var(--film)",Buch:"var(--book)",Spiel:"var(--game)"};
+const BY={Film:"Regie",Buch:"Autor:in",Spiel:"Entwickler / Studio"};
+let items=[],tab="",editId=null,curCover="";
+const $=id=>document.getElementById(id);
+function load(){try{const r=localStorage.getItem(KEY);items=r?JSON.parse(r):[];if(!Array.isArray(items))items=[]}catch(e){items=[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render(){
+  $("counts").innerHTML=TYPES.map(t=>`<div class="count" style="--c:${COL[t]}"><b>${items.filter(i=>i.type===t&&i.status!=="Wunschliste").length}</b><span>${t==="Buch"?"Bücher":t==="Spiel"?"Spiele":"Filme"}</span></div>`).join("");
+  $("tabs").innerHTML=[["","Alle"],["Film","Filme"],["Buch","Bücher"],["Spiel","Spiele"]].map(([v,l])=>`<button class="tab" data-v="${v}" aria-pressed="${tab===v}">${l}</button>`).join("");
+  const q=$("q").value.trim().toLowerCase(),st=$("status").value,so=$("sort").value;
+  let l=items.filter(i=>(!tab||i.type===tab)&&(!st||i.status===st)&&(!q||[i.title,i.by,i.place,i.fmt,i.note,i.code].join(" ").toLowerCase().includes(q)));
+  l.sort((a,b)=>so==="title"?a.title.localeCompare(b.title,"de"):so==="new"?b.added-a.added:so==="year"?(b.year||0)-(a.year||0):(b.rating||0)-(a.rating||0));
+  $("list").innerHTML=l.length?l.map(i=>`<li><button class="item" data-id="${i.id}" style="--c:${COL[i.type]}">${i.cover?`<img src="${esc(i.cover)}" alt="" loading="lazy" style="width:44px;height:64px;object-fit:cover;border-radius:4px">`:""}<div><h3>${esc(i.title)}</h3><div class="meta">${esc([i.by,i.year].filter(Boolean).join(", "))}</div><span class="badge">${i.type}${i.fmt?" · "+esc(i.fmt):""}</span><span class="badge">${i.status}${i.place?": "+esc(i.place):""}</span></div>${i.rating>0?`<span class="stars" aria-label="${i.rating} Sterne">${"★".repeat(i.rating)}</span>`:""}</button></li>`).join(""):`<li class="empty">${items.length?"Nichts gefunden. Passe Suche oder Filter an.":"Noch nichts erfasst. Tippe auf „+ Neu“, um den ersten Eintrag anzulegen."}</li>`;
+}
+function openForm(id,pre){
+  editId=id;const i=items.find(x=>x.id===id)||{type:tab||"Film",status:"Vorhanden",rating:0,...pre};
+  $("f-type").value=i.type;$("f-title").value=i.title||"";$("f-code").value=i.code||"";curCover=i.cover||"";$("codeMsg").textContent="";$("f-by").value=i.by||"";$("f-year").value=i.year||"";$("f-fmt").value=i.fmt||"";
+  $("f-status").value=i.status;$("f-rating").value=i.rating||0;$("f-place").value=i.place||"";$("f-note").value=i.note||"";
+  $("f-by-l").textContent=BY[i.type];$("del").style.display=id?"":"none";$("dlg").showModal();
+}
+$("f-type").onchange=e=>$("f-by-l").textContent=BY[e.target.value];
+$("add").onclick=()=>openForm(null);
+$("cancel").onclick=()=>$("dlg").close();
+$("save").onclick=()=>{
+  const title=$("f-title").value.trim();if(!title){$("f-title").focus();return}
+  const d={type:$("f-type").value,title,by:$("f-by").value.trim(),year:+$("f-year").value||"",fmt:$("f-fmt").value.trim(),status:$("f-status").value,rating:+$("f-rating").value,place:$("f-place").value.trim(),code:$("f-code").value.trim(),cover:curCover,note:$("f-note").value.trim()};
+  if(editId){Object.assign(items.find(x=>x.id===editId),d)}else{items.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),added:Date.now(),...d})}
+  save();render();$("dlg").close();
+};
+$("del").onclick=()=>{if(confirm("Diesen Eintrag löschen?")){items=items.filter(x=>x.id!==editId);save();render();$("dlg").close()}};
+$("list").onclick=e=>{const b=e.target.closest(".item");if(b)openForm(b.dataset.id)};
+$("tabs").onclick=e=>{const b=e.target.closest(".tab");if(b){tab=b.dataset.v;render()}};
+["q","status","sort"].forEach(id=>$(id).addEventListener("input",render));
+$("dataBtn").onclick=()=>{$("json").value=JSON.stringify(items,null,1);$("dataMsg").textContent="";$("dataDlg").showModal()};
+$("closeData").onclick=()=>$("dataDlg").close();
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("json").value);$("dataMsg").textContent="Kopiert."}catch(e){$("json").select();$("dataMsg").textContent="Text ist markiert. Bitte manuell kopieren."}};
+$("imp").onclick=()=>{try{const d=JSON.parse($("json").value);if(!Array.isArray(d)||d.some(x=>!x.title||!TYPES.includes(x.type)))throw 0;
+  if(!confirm(d.length+" Einträge importieren? Die aktuelle Sammlung wird ersetzt."))return;
+  items=d.map(x=>({added:Date.now(),...x,id:x.id||Math.random().toString(36).slice(2,10)}));save();render();$("dataMsg").textContent="Import abgeschlossen."}catch(e){$("dataMsg").textContent="Die Daten sind ungültig. Bitte prüfe die Sicherung."}};
+/* Barcode-Scanner */
+let stream=null,scanning=false,zxr=null,scanCb=null;
+function cleanup(){scanning=false;if(zxr){try{zxr.reset()}catch(e){}zxr=null}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+$("scanDlg").addEventListener("close",cleanup);
+function stopScan(){if($("scanDlg").open)$("scanDlg").close()}
+async function startScan(cb){
+  scanCb=cb;$("scanInput").value="";$("scanMsg").textContent="Halte den Barcode ruhig vor die Kamera.";$("scanDlg").showModal();
+  const v=$("video"),done=c=>{if(!scanning)return;stopScan();cb(c)};
+  scanning=true;
+  try{
+    if("BarcodeDetector" in window){
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+      v.srcObject=stream;await v.play();
+      const det=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e"]});
+      const loop=async()=>{if(!scanning)return;try{const r=await det.detect(v);if(r.length){done(r[0].rawValue);return}}catch(e){}setTimeout(loop,250)};loop();
+    }else if(window.ZXing){
+      zxr=new ZXing.BrowserMultiFormatReader();
+      zxr.decodeFromVideoDevice(null,v,r=>{if(r)done(r.getText())}).catch(()=>{$("scanMsg").textContent="Kein Kamerazugriff. Gib den Code unten von Hand ein."});
+    }else $("scanMsg").textContent="Scanner nicht verfügbar. Gib den Code unten von Hand ein.";
+  }catch(e){$("scanMsg").textContent="Kein Kamerazugriff. Gib den Code unten von Hand ein."}
+}
+$("scanCancel").onclick=stopScan;
+$("scanManual").onclick=()=>{const c=$("scanInput").value.trim();if(!c)return;const cb=scanCb;scanning=true;stopScan();cb(c)};
+$("scanTop").onclick=()=>startScan(c=>{const f=items.find(x=>x.code===c);f?openForm(f.id):(openForm(null,{code:c}),autoFill(c))});
+$("scanForm").onclick=()=>startScan(c=>{$("f-code").value=c;const d=items.find(x=>x.code===c&&x.id!==editId);if(d)$("codeMsg").textContent="Achtung: Dieser Code gehört schon zu „"+d.title+"“.";else autoFill(c)});
+async function autoFill(c){
+  const m=$("codeMsg");
+  if(!/^97[89]\d{10}$/.test(c)){m.textContent="Code übernommen. Für Filme und Spiele gibt es keinen automatischen Abgleich, bitte Titel selbst eintragen.";return}
+  m.textContent="Suche in Open Library …";
+  try{
+    const r=await fetch("https://openlibrary.org/api/books?bibkeys=ISBN:"+c+"&format=json&jscmd=data");
+    const d=(await r.json())["ISBN:"+c];
+    if(!d){m.textContent="Kein Treffer. Bitte Titel selbst eintragen.";return}
+    $("f-type").value="Buch";$("f-by-l").textContent=BY.Buch;
+    if(!$("f-title").value)$("f-title").value=d.title+(d.subtitle?": "+d.subtitle:"");
+    if(!$("f-by").value&&d.authors)$("f-by").value=d.authors.map(a=>a.name).join(", ");
+    const y=(d.publish_date||"").match(/\d{4}/);if(!$("f-year").value&&y)$("f-year").value=y[0];
+    if(d.cover)curCover=d.cover.medium||d.cover.small||"";
+    m.textContent="Daten aus Open Library übernommen. Bitte kurz prüfen.";
+  }catch(e){m.textContent="Abruf fehlgeschlagen. Bist du online? Du kannst die Daten auch selbst eintragen."}
+}
+$("f-code").addEventListener("change",()=>{const c=$("f-code").value.trim();if(c)autoFill(c)});
+load();render();
+</script>
+</body>
+</html>
